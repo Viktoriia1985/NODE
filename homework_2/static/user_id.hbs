@@ -5,20 +5,20 @@
         <meta name="viewport"
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Users page</title>
+        <title>User page</title>
     </head>
     <body>
 
+        <h1>USER PAGE</h1>
         <div>
-            {{#each users}}
-                <hr>
-                <div>name: {{this.name}}</div>
-                <div>age: {{this.age}}</div>
-                <div>email: {{this.email}}</div>
-                <div>password: {{this.password}}</div>
-                <hr>
-            {{/each}}
+            <div>Name: {{currentUser.name}}</div>
+            <div>Age: {{currentUser.age}}</div>
+            <div>Email: {{currentUser.email}}</div>
         </div>
+
+        <form action="/users">
+            <button>Show all users</button>
+        </form>
 
     </body>
 </html>

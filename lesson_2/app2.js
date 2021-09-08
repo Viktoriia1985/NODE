@@ -3,8 +3,8 @@ const express = require('express');
 const expressHbs = require('express-handlebars');
 const path = require('path');
 
-const { PORT } = require('./config/variables');
-const users = require('./db/users');
+const { PORT } = require('./config1/variables1');
+const users = require('./db1/users1');
 
 const app2 = express();
 

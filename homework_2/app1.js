@@ -36,7 +36,7 @@ app1.get('/users', (req, res) => {
     res.render('users', { users });
 })
 
-// const usersPath = path.join(__dirname, 'db', 'users.json');
+// const usersPath = path.join(__dirname, 'db1', 'users.json');
 
 app1.post('/users', async (req, res) => {
     const { email, password } = req.body;

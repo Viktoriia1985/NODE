@@ -22,14 +22,6 @@ app2.get('/ping', (req, res) => {
 
 app2.get('/', (req, res) => {
     console.log(req);
-
-    // res.end('finish');
-    //res.send('<h1>send HTML</h1>');    //send to browser HTML
-    // res.json({name: 'Viktoriia', age: '36'});
-    // res.write('HELLO ');
-    // res.write('World ');
-    // res.write('2021');
-    // res.end();
     res.status(404).end('Not found')
 });
 

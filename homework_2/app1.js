@@ -13,7 +13,6 @@ const expressHbs = require('express-handlebars');
 const path = require('path');
 
 const { PORT } = require('./config/variables');
-const users = require('./db/users.json');
 
 const app1 = express();
 
@@ -31,13 +30,15 @@ app1.get('/', (req, res) => {
     res.render('homeTask')
 });
 
-app1.get('/users', (req, res) => {
+app1.get('/users', async (req, res) => {
+    const data = await fs.readFileSync(path.join(__dirname, 'db', 'users.json'))
+    const users = JSON.parse(data.toString());
+
     res.render('users', { users });
 })
 
 app1.post('/users', async (req, res) => {
     const { email, password } = req.body;
-    console.log(req.body);
 
     const data = await fs.readFileSync(path.join(__dirname, 'db', 'users.json'))
     const users = JSON.parse(data.toString());
@@ -53,8 +54,12 @@ app1.post('/users', async (req, res) => {
     res.end();
 });
 
-app1.get('/users/:user_id', (req, res) => {
+app1.get('/users/:user_id', async (req, res) => {
     const { user_id } = req.params;
+
+    const data = await fs.readFileSync(path.join(__dirname, 'db', 'users.json'))
+    const users = JSON.parse(data.toString());
+
     const currentUser = users[user_id];
 
     if (!currentUser) {
@@ -69,13 +74,12 @@ app1.get('/login', (req, res) => {
 })
 
 app1.post('/login', async (req, res) => {
-    console.log(req.body)
     const { email, password } = req.body;
 
-    const data = await fs.readFileSync(path.join(__dirname, 'db', 'users.json'))
+    const data = await fs.readFileSync(path.join(__dirname, 'db', 'users.json'));
     const users = JSON.parse(data.toString());
 
-    const user = users.find(user => user.email === email && user.password === password)
+    const user = users.find(user => user.email === email && user.password === password);
 
     if (!user) {
         res.redirect('/registration');
@@ -88,26 +92,30 @@ app1.post('/login', async (req, res) => {
 
 app1.get('/registration', (req, res) => {
     res.render('registration');
-    console.log(req.body);
 });
 
 app1.post('/registration', async (req, res) => {
-    const { name, age, email, password } = req.body;
-    console.log(req.body);
+    const { body, body: { email, password, name, age } } = req;
 
     const data = await fs.readFileSync(path.join(__dirname, 'db', 'users.json'))
     const users = JSON.parse(data.toString());
 
-    const userForRegister = users.find(user => user.name === name && user.age === age && user.email === email
-        && user.password === password);
-
-    if (!userForRegister) {
-        res.status(404).end('USER NOT FOUND!');
-        users.push(req.body);
+    if (!email || !password || !name || !age) {
+        res.status(400).end('BAD REQUEST');
         return;
     }
 
-    res.redirect('/users');
+    const userForRegister = users.find(user => user.email === body.email);
+
+    if (userForRegister) {
+        res.status(404).end('EMAIL IS EXIST!');
+        return;
+    }
+
+    users.push(body);
+    await fs.writeFileSync(path.join(__dirname, 'db', 'users.json'), JSON.stringify(users))
+
+    res.redirect('/login');
     res.end();
 });
 

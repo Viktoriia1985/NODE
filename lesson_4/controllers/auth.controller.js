@@ -2,5 +2,6 @@
 //
 // module.exports = {
 //     loginUser: () => {
+//         res.json('HELLO');
 //     }
 // };

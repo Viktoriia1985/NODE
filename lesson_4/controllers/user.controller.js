@@ -43,4 +43,15 @@ module.exports = {
             next(e);
         }
     },
+
+    updateUser: async (req, res, next) => {
+        try {
+            const { user_id } = req.params;
+            await User.updateOne({ _id: user_id }, req.body);
+
+            res.status(201).json(`user with id ${user_id} is updated successfully`);
+        } catch (e) {
+            next(e);
+        }
+    }
 };

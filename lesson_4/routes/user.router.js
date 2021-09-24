@@ -6,6 +6,7 @@ const { isUserPresent, checkUniqueEmail } = require('../middlewares/user.middlew
 router.post('/', checkUniqueEmail, userController.createUser);
 router.get('/', userController.getAllUsers);
 router.get('/:user_id', isUserPresent, userController.getSingleUser);
+router.patch('/:user_id', isUserPresent, userController.updateUser);
 router.delete('/:user_id', isUserPresent, userController.deleteUser);
 
 module.exports = router;

@@ -1,3 +1,4 @@
 module.exports = {
-    userSchema: require('./User')
+    userSchema: require('./User'),
+    carSchema: require('./Car'),
 };

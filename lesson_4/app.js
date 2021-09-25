@@ -10,12 +10,11 @@ mongoose.connect('mongodb://localhost:27017/apr-2021');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const { authRouter, userRouter } = require('./routes');
+const { userRouter, carRouter } = require('./routes');
 
 app.get('/ping', (req, res) => res.json('Pong'));
-
-app.use('/auth', authRouter);
 app.use('/users', userRouter);
+app.use('/cars', carRouter);
 app.use('*', _notFoundError);
 app.use(_mainErrorHandler);
 
@@ -26,7 +25,7 @@ app.listen(PORT, () => {
 function _notFoundError(err, req, res, next) {
     next({
         status: err.status || 404,
-        message: err.message || 'Not found'
+        message: err.message || 'Not found',
     });
 }
 

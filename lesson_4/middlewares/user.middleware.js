@@ -24,8 +24,6 @@ module.exports = {
         try {
             const { user } = req;
 
-            // console.log(user)
-
             if (user.role !== 'admin') {
                 throw new ErrorHandler(403, 'forbidden delete');
             }

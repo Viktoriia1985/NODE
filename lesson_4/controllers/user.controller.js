@@ -1,6 +1,6 @@
 //  цьому файлі створюється бізнес логіка
 
-const User = require('../dataBase/User');
+const { userService } = require('../services');
 
 module.exports = {
     getSingleUser: (req, res, next) => {
@@ -15,7 +15,7 @@ module.exports = {
 
     getAllUsers: async (req, res, next) => {
         try {
-            const users = await User.find({});
+            const users = await userService.getAllUsers();
 
             res.json(users);
         } catch (e) {
@@ -25,7 +25,7 @@ module.exports = {
 
     createUser: async (req, res, next) => {
         try {
-            const createdUser = await User.create(req.body);
+            const createdUser = await userService.createUser(req.body);
 
             res.status(201).json(createdUser);
         } catch (e) {
@@ -36,9 +36,10 @@ module.exports = {
     deleteUser: async (req, res, next) => {
         try {
             const { user_id } = req.params;
-            await User.deleteOne({ _id: user_id });
 
-            res.status(204).json(`User with id ${user_id} is deleted`);
+            await userService.deleteUser(user_id);
+
+            res.sendStatus(204);
         } catch (e) {
             next(e);
         }
@@ -47,7 +48,8 @@ module.exports = {
     updateUser: async (req, res, next) => {
         try {
             const { user_id } = req.params;
-            await User.updateOne({ _id: user_id }, req.body);
+
+            await userService.updateUser(user_id, req.body);
 
             res.status(201).json(`user with id ${user_id} is updated successfully`);
         } catch (e) {

@@ -17,7 +17,9 @@ const createUserValidator = Joi.object({
 
     girls: Joi.array()
         .items(girlValidator)
-        .when('car', { is: true, then: Joi.required() })
+        .when('car', { is: true, then: Joi.required() }),
+
+    // a: Joi.alternatives().conditional('b', { is: 5, then: Joi.string(), otherwise: Joi.number() }),
 });
 
 module.exports = {

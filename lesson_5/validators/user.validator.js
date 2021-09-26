@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { CURRENT_YEAR } = require('../config/variables');
+const { CURRENT_YEAR, EMAIL_REGEXP, PASSWORD_REGEXP } = require('../config/constants');
 const userRolesEnum = require('../config/user-roles.enum');
 
 const girlValidator = Joi.object({
@@ -8,9 +8,10 @@ const girlValidator = Joi.object({
 });
 
 const createUserValidator = Joi.object({
-    name: Joi.string().alphanum().min(2).max(30).required(),
+    name: Joi.string().regex(PASSWORD_REGEXP).required(),
     password: Joi.string().min(8).max(120).required(),
     born_year: Joi.number().min(CURRENT_YEAR - 120).max(CURRENT_YEAR - 6),
+    email: Joi.string().regex(EMAIL_REGEXP),
     role: Joi.string().allow(...Object.values(userRolesEnum)),
 
     car: Joi.boolean(),

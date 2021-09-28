@@ -8,10 +8,12 @@ const girlValidator = Joi.object({
 });
 
 const createUserValidator = Joi.object({
-    name: Joi.string().regex(PASSWORD_REGEXP).required(),
-    password: Joi.string().min(8).max(120).required(),
+    name: Joi.string().alphanum().min(2).max(30)
+        .trim()
+        .required(),
+    password: Joi.string().regex(PASSWORD_REGEXP).required(),
     born_year: Joi.number().min(CURRENT_YEAR - 120).max(CURRENT_YEAR - 6),
-    email: Joi.string().regex(EMAIL_REGEXP),
+    email: Joi.string().regex(EMAIL_REGEXP).required(),
     role: Joi.string().allow(...Object.values(userRolesEnum)),
 
     car: Joi.boolean(),
@@ -23,6 +25,14 @@ const createUserValidator = Joi.object({
     // a: Joi.alternatives().conditional('b', { is: 5, then: Joi.string(), otherwise: Joi.number() }),
 });
 
+const updateUser = Joi.object({
+    name: Joi.string().alphanum().min(2).max(30),
+    // password: Joi.string().regex(PASSWORD_REGEXP),           // !!! PASSWORD НЕ ВІДДАЄТЬСЯ на FRONT-END !!!
+    email: Joi.string().regex(EMAIL_REGEXP),
+    // role: Joi.string().allow(...Object.values(userRolesEnum)),      // міняє ADMIN
+});
+
 module.exports = {
-    createUserValidator
+    createUserValidator,
+    updateUser
 };

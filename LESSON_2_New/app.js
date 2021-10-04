@@ -2,8 +2,8 @@ const express = require('express');
 const expressHbs = require('express-handlebars');
 const path = require('path');
 
-const { PORT } = require('./config/variables');
-const users = require('./db/users');
+const { variables: { PORT } } = require('./config');
+const { users }= require('./db');
 
 const app = express();
 

@@ -1,4 +1,3 @@
-
 const express = require('express');
 const expressHbs = require('express-handlebars');
 const path = require('path');
@@ -33,7 +32,7 @@ app2.get('/', (req, res) => {
     res.status(404).end('Not found')
 });
 
- app2.get('/users', (req, res) => {
+app2.get('/users', (req, res) => {
     res.json(
         [
             { name: 'Dimas' },
@@ -43,7 +42,7 @@ app2.get('/', (req, res) => {
 });
 
 app2.get('/login', (req, res) => {
-    res.render('login', {isMale: true});
+    res.render('login', { isMale: true });
 });
 
 app2.get('/users', (req, res) => {

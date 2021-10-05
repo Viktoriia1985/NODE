@@ -33,7 +33,7 @@ app1.get('/', (req, res) => {
     res.render('homeTask')
 });
 
-const readFile = () => {
+const readFile = async () => {
     const data = await readPromisify(path.join(__dirname, 'db', 'users.json'));
     return JSON.parse(data.toString());
 }
@@ -48,7 +48,7 @@ app1.get('/users', async (req, res) => {
     res.render('users', { users });
 })
 
-app1.post('/users',  async (req, res) => {
+app1.post('/users',  (req, res) => {
     const { email, password } = req.body;
 
     const users = await readFile();
@@ -57,7 +57,7 @@ app1.post('/users',  async (req, res) => {
 
     if (!user) {
         res.redirect('/registration');
-        return;
+        retur
     }
 
     res.redirect('/users');

@@ -33,7 +33,7 @@ app1.get('/', (req, res) => {
     res.render('homeTask')
 });
 
-const readFile = () => {
+const readFile = async () => {
     const data = await readPromisify(path.join(__dirname, 'db', 'users.json'));
     return JSON.parse(data.toString());
 }

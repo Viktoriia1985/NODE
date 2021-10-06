@@ -1,8 +1,9 @@
 const express = require('express');
 
+const userRouter = require('./routes/user.router');
+
 const app = express();
 const { variables: {PORT} } = require('./config');
-const userRouter = require('./routes/user.router');
 
 app.use(express.json());
 app.use(express.urlencoded( {extended: true}));

@@ -34,6 +34,6 @@ module.exports = {
     },
 
     updateUser: (req, res) => {
-        res.json('YODATE USER');
+        res.json('UPDATE USER');
     }
 };

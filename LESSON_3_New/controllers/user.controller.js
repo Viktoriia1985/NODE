@@ -9,7 +9,6 @@ module.exports = {
         } catch (e) {
             res.json(e);
         }
-
     },
 
     getUserById: async (req, res) => {
@@ -21,9 +20,9 @@ module.exports = {
 
     createUser: async (req, res) => {
         try {
-            console.log('*************************************************');
-            console.log(req.body);
-            console.log('*************************************************');
+            // console.log('----------------------');
+            // console.log(req.body);
+            // console.log('----------------------');
 
             const newUser = await User.create(req.body);
 

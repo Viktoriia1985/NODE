@@ -1,10 +1,11 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
-
-const { PORT } = require('./configs/config');
+const { config: { PORT, MONGO_CONNECT_URL } } = require('./configs');
 
 const app = express();
 
+mongoose.connect(MONGO_CONNECT_URL);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

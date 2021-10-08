@@ -20,19 +20,23 @@ module.exports = {
 
     createUser: async (req, res) => {
         try {
-            // console.log('----------------------');
-            // console.log(req.body);
-            // console.log('----------------------');
-
             const newUser = await User.create(req.body);
 
-            res.json(newUser);
+            res.json(newUser).status(201);
         } catch (e) {
             res.json(e);
         }
     },
 
-    updateUser: (req, res) => {
-        res.json('UPDATE USER');
+    deleteUser: async (req, res) => {
+        try {
+            const { user_id } = req.params;
+
+            await User.findByIdAndRemove(user_id);
+
+            res.sendStatus(204);
+        } catch (e) {
+            res.json(e);
+        }
     }
 };

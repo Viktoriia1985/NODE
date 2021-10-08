@@ -1,17 +1,19 @@
-//перевіряє валідність даних
-
 const User = require('../dataBase/User');
 
 module.exports = {
     createUserMiddleware: async (req, res, next) => {
         try {
-            const userByEmail = await User.findOne({ email: req.body.email });
+            const { email } = req.body;
+
+            const userByEmail = await User.findOne({ email });
 
             if (userByEmail) {
                 throw new Error('Email already exist');
             }
 
-            // req.body.xxx = 'hello';
+            if (userByEmail) {
+                throw new Error('Email already exist');
+            }
 
             next();
         } catch (e) {

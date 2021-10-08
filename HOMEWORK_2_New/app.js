@@ -13,5 +13,3 @@ app.use('/users', userRouter);
 app.listen(PORT, () => {
     console.log('App listen 5000', PORT);
 });
-
-

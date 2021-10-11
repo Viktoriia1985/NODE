@@ -5,23 +5,22 @@ const userUtil = require('../util/user.util');
 module.exports = {
     getUsers: async (req, res) => {
         try {
-            const users = await User.find();
+            const users = await User.find().lean();
+
+            users.map(user => userUtil.userNormalizator(user));
 
             res.json(users);
         } catch (e) {
-            res.json(e);
+            res.json(e.message);
         }
+
     },
 
-    getUserById: async (req, res) => {
+    getUserById: (req, res) => {
         try {
-            const { user_id } = req.params;
-            const user = await User.findById(user_id).lean();
+            const {user} = req;
 
-            const normalizedUser = userUtil.userNormalizator(user);
-
-            res.json(normalizedUser);
-
+            res.json(user);
         } catch (e) {
             res.json(e.message);
         }
@@ -31,23 +30,33 @@ module.exports = {
         try {
             const hashedPassword = await passwordService.hash(req.body.password);
 
-            const newUser = await User.create({ ...req.body, password: hashedPassword });
+            const newUser = await User.create({...req.body, password: hashedPassword});
 
-            res.json(newUser).status(201);
+            newUser.password = undefined;
+
+            res.json(newUser);
         } catch (e) {
-            res.json(e);
+            res.json(e.message);
         }
     },
 
-    deleteUser: async (req, res) => {
+    updateUserById:  (req, res) => {
         try {
-            const { user_id } = req.params;
-
-            await User.findByIdAndRemove(user_id);
-
-            res.sendStatus(204);
+            res.json('User is updated');
         } catch (e) {
-            res.json(e);
+            res.json(e.message);
         }
-    }
+    },
+
+    deleteUserById: async (req, res) => {
+        try {
+            const {user_id} = req.params;
+
+            const user = await User.deleteOne({_id: user_id});
+
+            res.json(user);
+        } catch (e) {
+            res.json(e.message);
+        }
+    },
 };

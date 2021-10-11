@@ -15,7 +15,7 @@ const createUserValidator = Joi.object({
         .string()
         .regex(EMAIL_REGEXP)
         .trim()
-        .required(),//на фронтенді і бекенді мати одну й ту саму регулярку
+        .required(),
     role: Joi.string().allow(...Object.values(userRoles)),
     password: Joi
         .string()
@@ -23,6 +23,19 @@ const createUserValidator = Joi.object({
         .required()
 });
 
+const updateUserValidator = Joi.object({
+    name: Joi
+        .string()
+        .alphanum()
+        .min(2)
+        .max(30)
+        .trim(),
+    email: Joi.string()
+        .regex(EMAIL_REGEXP)
+        .trim()
+});
+
 module.exports = {
-    createUserValidator
+    createUserValidator,
+    updateUserValidator
 };

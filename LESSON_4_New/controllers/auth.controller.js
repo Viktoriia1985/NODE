@@ -1,8 +1,8 @@
 module.exports = {
-    getLogin: (req, res) => {
-        try{
-            res.json(req.user);
-        } catch (e){
+    authorizationUser: (req, res) => {
+        try {
+            res.json('Authorisation is successful');
+        } catch (e) {
             res.json(e.message);
         }
     }

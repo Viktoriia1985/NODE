@@ -7,6 +7,7 @@ router.post(
     '/',
     authMiddleware.isALoginValid,
     authMiddleware.authorizationMiddleware,
-    authController.authorizationUser);
+    authController.authorizationUser
+);
 
 module.exports = router;

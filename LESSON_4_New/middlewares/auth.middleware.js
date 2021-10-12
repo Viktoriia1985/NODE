@@ -5,14 +5,14 @@ const passwordService = require('../service/password.servise');
 module.exports = {
     isALoginValid: async (req, res, next) => {
         try {
-            const {email, password} = req.body;
-            const {error} = await authValidator.validate({email, password});
+            const { email, password } = req.body;
+            const { error } = await authValidator.authValidator.validate({ email, password });
 
             if (error) {
                 throw new Error('Wrong email or password');
             }
 
-            const user = await User.findOne({email});
+            const user = await User.findOne({ email });
 
             if (!user) {
                 throw new Error('Wrong email or password');
@@ -28,7 +28,7 @@ module.exports = {
     authorizationMiddleware: async (req, res, next) => {
         try {
             const hashPassword = req.hashPassword;
-            const {password} = req.body;
+            const { password } = req.body;
 
             await passwordService.compare(password, hashPassword);
 

@@ -20,12 +20,14 @@ router.get(
 
 router.put(
     '/:user_id',
+    userMiddleware.getUserByIdMiddleware,
     userMiddleware.updateUserValidBody,
     userMiddleware.updateUserMiddleware,
     userController.updateUserById);
 
 router.delete(
     '/:user_id',
+    userMiddleware.getUserByIdMiddleware,
     userController.deleteUserById);
 
 module.exports = router;

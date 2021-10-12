@@ -18,7 +18,7 @@ module.exports = {
 
     getUserById: (req, res) => {
         try {
-            const {user} = req;
+            const { user } = req;
 
             res.json(user);
         } catch (e) {
@@ -30,7 +30,7 @@ module.exports = {
         try {
             const hashedPassword = await passwordService.hash(req.body.password);
 
-            const newUser = await User.create({...req.body, password: hashedPassword});
+            const newUser = await User.create({ ...req.body, password: hashedPassword });
 
             newUser.password = undefined;
 
@@ -40,9 +40,16 @@ module.exports = {
         }
     },
 
-    updateUserById:  (req, res) => {
+    updateUserById: async (req, res) => {
         try {
-            res.json('User is updated');
+            const { user_id } = req.params;
+            const { name } = req.body;
+
+            const user = await User.findByIdAndUpdate(user_id, { name }, { new: true });
+
+            const normalizedUser = userUtil.userNormalizator(user);
+
+            res.json(normalizedUser);
         } catch (e) {
             res.json(e.message);
         }
@@ -50,9 +57,9 @@ module.exports = {
 
     deleteUserById: async (req, res) => {
         try {
-            const {user_id} = req.params;
+            const { user_id } = req.params;
 
-            const user = await User.deleteOne({_id: user_id});
+            const user = await User.deleteOne({ _id: user_id });
 
             res.json(user);
         } catch (e) {

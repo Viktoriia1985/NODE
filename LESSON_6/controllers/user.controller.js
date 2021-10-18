@@ -5,7 +5,9 @@ const { userUtil } = require('../util');
 module.exports = {
     getUsers: async (req, res, next) => {
         try {
-            const users = await User.find({});
+            const users = await User
+                .find({})
+                .select('-password');
 
             const normalizedUsers = users.map(value => userUtil.userNormalizator(value));
 

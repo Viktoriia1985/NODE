@@ -1,40 +1,23 @@
 const router = require('express').Router();
 
-const { userController } = require('../controllers');
-const { userMiddleware } = require('../middlewares');
-const { userRoles } = require('../configs');
-const { userValidators } = require('../validators');
+const userController = require('../controllers/user.controller');
+const { authMiddleware, userMiddleware } = require('../middlewares');
 
-router.get(
-    '/',
-    userController.getUsers
-);
+router.get('/', userController.getUsers);
+
+router.get('/:user_id',
+    userController.getUserById);
+
 router.post(
     '/',
-    userMiddleware.isUserBodyValid(userValidators.createUserValidator),
-    userMiddleware.checkUserByEmail,
+    userMiddleware.isUserBodyValid,
+    userMiddleware.createUserMiddleware,
     userController.createUser
 );
 
-router.get(
-    '/:user_id',
-    userMiddleware.checkUserId,
-    userController.getUserById
-);
-router.put(
-    '/:user_id',
-    userMiddleware.isUserBodyValid(userValidators.updateUserValidator),
-    userMiddleware.checkUserId,
-    userController.updateUser
-);
-router.delete(
-    '/:user_id',
-    userMiddleware.checkUserId,
-    userMiddleware.checkUserRole([
-        userRoles.USER,
-        userRoles.ADMIN
-    ]),
-    userController.deleteUser
-);
+router.put('/',
+    userController.updateUser);
+
+router.delete('/',authMiddleware.checkAccessToken, userController.deleteAccount);
 
 module.exports = router;

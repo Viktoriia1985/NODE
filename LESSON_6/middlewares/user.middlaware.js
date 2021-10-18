@@ -1,18 +1,17 @@
 const User = require('../dataBase/User');
-const { passwordService } = require('../service');
-const { errors, ErrorHandler } = require('../errors');
-
-const { EMAIL_REGISTERED, NOT_VALID_BODY, NOT_FOUND, NOT_FOUND_BY_ID, FORBIDDEN_REQUEST } = errors;
+const userValidator = require('../validators/user.validator');
+const ErrorHandler = require('../errors');
 
 module.exports = {
-    checkUserByEmail: async (req, res, next) => {
+    createUserMiddleware: async (req, res, next) => {
         try {
-            const { email } = req.body;
-
-            const userByEmail = await User.findOne({ email });
+            const userByEmail = await User.findOne({ email: req.body.email });
 
             if (userByEmail) {
-                throw new ErrorHandler(EMAIL_REGISTERED.message, EMAIL_REGISTERED.code);
+                return next({
+                    message: 'Email already exist',
+                    status: 404
+                });
             }
 
             next();
@@ -21,19 +20,18 @@ module.exports = {
         }
     },
 
-    checkUserForLogin: async (req, res, next) => {
+    isUserPresent: async (req, res, next) => {
         try {
-            const { email, password } = req.body;
+            const userByEmail = await User
+                .findOne({ email: req.body.email })
+                .select('+password')
+                .lean();
 
-            const user = await User.findOne({ email });
-
-            if (!user) {
-                throw new ErrorHandler(NOT_FOUND.message, NOT_FOUND.code);
+            if (!userByEmail) {
+                throw new ErrorHandler.ErrorHandler('Wrong mail or password', 418);
             }
 
-            await passwordService.compare(password, user.password);
-
-            req.user = user;
+            req.user = userByEmail;
 
             next();
         } catch (e) {
@@ -41,38 +39,12 @@ module.exports = {
         }
     },
 
-    checkUserId: async (req, res, next) => {
+    isUserBodyValid: (req, res, next) => {
         try {
-            const { user_id } = req.params;
-
-            const user = await User.findById(user_id);
-
-            if (!user) {
-                throw new ErrorHandler(NOT_FOUND_BY_ID.message, NOT_FOUND_BY_ID.code);
-            }
-
-            req.user = user;
-
-            next();
-        } catch (e) {
-            next(e);
-        }
-    },
-
-    isUserBodyValid: (validator, isLogin) => (req, res, next) => {
-        try {
-            const { error, value } = validator.validate(req.body);
+            const { error, value } = userValidator.createUserValidator.validate(req.body);
 
             if (error) {
-                let message;
-
-                if (isLogin) {
-                    message = NOT_VALID_BODY.message;
-                } else {
-                    message = error.details[0].message;
-                }
-
-                throw new ErrorHandler(message, NOT_VALID_BODY.code);
+                throw new Error(error.details[0].message);
             }
 
             req.body = value;
@@ -87,13 +59,17 @@ module.exports = {
         try {
             const { role } = req.user;
 
+            console.log('_____________________________________');
+            console.log(role);
+            console.log('_____________________________________');
+
             if (!roleArr.includes(role)) {
-                throw new ErrorHandler(FORBIDDEN_REQUEST.message, FORBIDDEN_REQUEST.code);
+                throw new Error('Access denied');
             }
 
             next();
         } catch (e) {
             next(e);
         }
-    }
+    },
 };

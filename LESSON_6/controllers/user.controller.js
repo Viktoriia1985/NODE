@@ -1,25 +1,39 @@
 const User = require('../dataBase/User');
-const { passwordService } = require('../service');
-const { userUtil } = require('../util');
+const passwordService = require('../service/password.service');
+const userUtil = require('../util/user.util');
 
 module.exports = {
     getUsers: async (req, res, next) => {
         try {
-            const users = await User
-                .find({})
-                .select('-password');
+            const users = await User.find();
 
-            const normalizedUsers = users.map(value => userUtil.userNormalizator(value));
-
-            res.json(normalizedUsers);
+            res.json(users);
         } catch (e) {
             next(e);
         }
+
     },
 
-    getUserById: (req, res, next) => {
+    getUserById: async (req, res, next) => {
         try {
-            const normalizedUser = userUtil.userNormalizator(req.user);
+            const { user_id } = req.params;
+            const user = await User
+                .findById(user_id)
+                // .select('+password')
+                // .select('-email')
+                .lean();
+
+            // isPasswordMatched()
+
+            console.log('_____________________________________________');
+            console.log(user);
+            console.log('_____________________________________________');
+
+            const normalizedUser = userUtil.userNormalizator(user);
+
+            console.log('______________normalizedUser_______________________________');
+            console.log(normalizedUser);
+            console.log('______________normalizedUser_______________________________');
 
             res.json(normalizedUser);
         } catch (e) {
@@ -29,44 +43,38 @@ module.exports = {
 
     createUser: async (req, res, next) => {
         try {
-            const { password } = req.body;
+            console.log('*************************************************');
+            console.log(req.body);
+            console.log('*************************************************');
 
-            const hashedPassword = await passwordService.hash(password);
+            const hashedPassword = await passwordService.hash(req.body.password);
+
+            console.log('_____hashedPassword_____');
+            console.log(hashedPassword);
+            console.log('_____hashedPassword_____');
+
 
             const newUser = await User.create({ ...req.body, password: hashedPassword });
 
-            const normalizedUser = userUtil.userNormalizator(newUser);
-
-            res.json(normalizedUser);
+            res.json(newUser);
         } catch (e) {
             next(e);
         }
     },
 
-    updateUser: async (req, res, next) => {
-        try {
-            const { user_id } = req.params;
-            const { name } = req.body;
-
-            const user = await User.findByIdAndUpdate(user_id, { name }, { new: true });
-
-            const normalizedUser = userUtil.userNormalizator(user);
-
-            res.json(normalizedUser);
-        } catch (e) {
-            next(e);
-        }
+    updateUser: (req, res) => {
+        res.json('YODATE USER');
     },
 
-    deleteUser: async (req, res, next) => {
+    deleteAccount: (req, res, next) => {
         try {
-            const { user_id } = req.params;
-
-            await User.deleteOne({ _id: user_id });
-
-            res.json('User deleted');
+            console.log('****************************************');
+            console.log(req.user);
+            console.log('****************************************');
+            res.json('OK');
         } catch (e) {
             next(e);
         }
     }
 };
+

@@ -1,10 +1,11 @@
 const { Schema, model } = require('mongoose');
+
 const { userRoles } = require('../configs');
 
 const userSchema = new Schema({
     name: {
         type: String,
-        required: false,
+        required: true,
         trim: true
     },
     email: {
@@ -25,4 +26,4 @@ const userSchema = new Schema({
     }
 }, { timestamps: true });
 
-module.exports = model('user', userSchema);
+module.exports = model(userRoles.USER, userSchema);

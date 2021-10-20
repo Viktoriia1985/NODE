@@ -1,7 +1,7 @@
 module.exports = {
     EMAIL_REGISTERED: {
         message: 'Email already exists',
-        code: 400
+        code: 409
     },
 
     NOT_VALID_BODY: {
@@ -12,11 +12,6 @@ module.exports = {
     FORBIDDEN_REQUEST: {
         message: 'Access denied',
         code: 403
-    },
-
-    NOT_FOUND: {
-        message: 'User not found',
-        code: 404
     },
 
     NOT_FOUND_BY_ID: {

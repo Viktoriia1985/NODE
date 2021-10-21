@@ -2,7 +2,7 @@ const User = require('../dataBase/User');
 const { passwordService } = require('../service');
 const { errors, ErrorHandler } = require('../errors');
 
-const { EMAIL_REGISTERED, NOT_VALID_BODY, NOT_FOUND, NOT_FOUND_BY_ID, FORBIDDEN_REQUEST } = errors;
+const { EMAIL_REGISTERED, NOT_VALID_BODY, NOT_FOUND_BY_ID, FORBIDDEN_REQUEST } = errors;
 
 module.exports = {
     checkUserByEmail: async (req, res, next) => {
@@ -28,13 +28,12 @@ module.exports = {
             const user = await User.findOne({ email });
 
             if (!user) {
-                throw new ErrorHandler(NOT_FOUND.message, NOT_FOUND.code);
+                throw new ErrorHandler(NOT_VALID_BODY.message, NOT_VALID_BODY.code);
             }
 
             await passwordService.compare(password, user.password);
 
             req.user = user;
-
             next();
         } catch (e) {
             next(e);
@@ -52,7 +51,6 @@ module.exports = {
             }
 
             req.user = user;
-
             next();
         } catch (e) {
             next(e);
@@ -64,19 +62,12 @@ module.exports = {
             const { error, value } = validator.validate(req.body);
 
             if (error) {
-                let message;
-
-                if (isLogin) {
-                    message = NOT_VALID_BODY.message;
-                } else {
-                    message = error.details[0].message;
-                }
-
-                throw new ErrorHandler(message, NOT_VALID_BODY.code);
+                throw new ErrorHandler(
+                    isLogin ? NOT_VALID_BODY.message : error.details[0].message,
+                    NOT_VALID_BODY.code);
             }
 
             req.body = value;
-
             next();
         } catch (e) {
             next(e);

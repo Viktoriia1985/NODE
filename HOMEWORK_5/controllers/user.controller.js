@@ -35,7 +35,7 @@ module.exports = {
 
             const normalizedUser = userUtil.userNormalizator(newUser);
 
-            res.json(normalizedUser);
+            res.json(normalizedUser).status(201);
         } catch (e) {
             next(e);
         }
@@ -50,7 +50,7 @@ module.exports = {
 
             const normalizedUser = userUtil.userNormalizator(user);
 
-            res.json(normalizedUser);
+            res.json(normalizedUser).status(201);
         } catch (e) {
             next(e);
         }
@@ -62,7 +62,7 @@ module.exports = {
 
             await User.deleteOne({ _id: user_id });
 
-            res.json('User deleted');
+            res.sendStatus(204);
         } catch (e) {
             next(e);
         }

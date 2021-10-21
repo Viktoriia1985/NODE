@@ -12,7 +12,7 @@ module.exports = {
             const userByEmail = await User.findOne({ email });
 
             if (userByEmail) {
-                throw new ErrorHandler(EMAIL_REGISTERED.message, EMAIL_REGISTERED.code);
+                throw new ErrorHandler(EMAIL_REGISTERED);
             }
 
             next();
@@ -28,7 +28,7 @@ module.exports = {
             const user = await User.findOne({ email });
 
             if (!user) {
-                throw new ErrorHandler(NOT_VALID_BODY.message, NOT_VALID_BODY.code);
+                throw new ErrorHandler(NOT_VALID_BODY);
             }
 
             await passwordService.compare(password, user.password);
@@ -47,7 +47,7 @@ module.exports = {
             const user = await User.findById(user_id);
 
             if (!user) {
-                throw new ErrorHandler(NOT_FOUND_BY_ID.message, NOT_FOUND_BY_ID.code);
+                throw new ErrorHandler(NOT_FOUND_BY_ID);
             }
 
             req.user = user;
@@ -62,9 +62,10 @@ module.exports = {
             const { error, value } = validator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(
-                    isLogin ? NOT_VALID_BODY.message : error.details[0].message,
-                    NOT_VALID_BODY.code);
+                throw new ErrorHandler({
+                    message: isLogin ? NOT_VALID_BODY.message : error.details[0].message,
+                    code: NOT_VALID_BODY.code
+                });
             }
 
             req.body = value;
@@ -79,7 +80,7 @@ module.exports = {
             const { role } = req.user;
 
             if (!roleArr.includes(role)) {
-                throw new ErrorHandler(FORBIDDEN_REQUEST.message, FORBIDDEN_REQUEST.code);
+                throw new ErrorHandler(FORBIDDEN_REQUEST);
             }
 
             next();

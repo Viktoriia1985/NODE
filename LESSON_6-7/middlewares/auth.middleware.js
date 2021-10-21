@@ -1,7 +1,7 @@
 const { AUTHORIZATION } = require('../configs/constants');
-const tokenTypeEnum = require('../configs/token-types.enum');
+const { tokenTypes } = require('../configs');
 const { jwtService, passwordService } = require('../service');
-const { ErrorHandler } = require('../errors/ErrorHandler');
+const { ErrorHandler } = require('../errors');
 const O_Auth = require('../dataBase/O_Auth');
 
 module.exports = {
@@ -56,7 +56,7 @@ module.exports = {
                 throw new ErrorHandler('No token', 401);
             }
 
-            await jwtService.verifyToken(token, tokenTypeEnum.REFRESH);
+            await jwtService.verifyToken(token, tokenTypes.REFRESH);
 
             const tokenResponse = await O_Auth
                 .findOne({ refresh_token: token })

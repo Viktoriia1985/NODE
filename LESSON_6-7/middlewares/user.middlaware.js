@@ -1,6 +1,6 @@
 const User = require('../dataBase/User');
 const userValidator = require('../validators/user.validator');
-const ErrorHandler = require('../errors');
+const { ErrorHandler } = require('../errors');
 
 module.exports = {
     createUserMiddleware: async (req, res, next) => {
@@ -28,7 +28,7 @@ module.exports = {
                 .lean();
 
             if (!userByEmail) {
-                throw new ErrorHandler.ErrorHandler('Wrong mail or password', 418);
+                throw new ErrorHandler('Wrong mail or password', 418);
             }
 
             req.user = userByEmail;

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } = require('../configs/config');
 const tokenTypeEnum = require('../configs/token-types.enum');
-const ErrorHandler = require('../errors/ErrorHandler');
+const { ErrorHandler } = require('../errors');
 
 module.exports = {
     generateTokenPair: () => {

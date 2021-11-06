@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } = require('../configs/config');
+const { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET, JWT_ACTION_SECRET } = require('../configs/config');
 const tokenTypeEnum = require('../configs/token-types.enum');
 const { ErrorHandler } = require('../errors');
 
@@ -23,5 +23,6 @@ module.exports = {
         } catch (e) {
             throw new ErrorHandler('Invalid token', 401);
         }
-    }
+    },
+    createActionToken: () => jwt.sign({}, JWT_ACTION_SECRET, {expiresIn:'1d'})
 };

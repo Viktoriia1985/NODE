@@ -1,7 +1,9 @@
 const { WELCOME } = require('../configs/email-action.enum');
 const User = require('../dataBase/User');
-const { passwordService, emailService } = require('../service');
+const { passwordService, emailService, jwtService } = require('../service');
 const userUtil = require('../util/user.util');
+const Action = require('../dataBase/Action');
+const {ACTION} = require('../configs/token-types.enum');
 
 module.exports = {
     getUsers: async (req, res, next) => {
@@ -44,16 +46,13 @@ module.exports = {
 
     createUser: async (req, res, next) => {
         try {
-            console.log('*************************************************');
-            console.log(req.body);
-            console.log('*************************************************');
-
             const hashedPassword = await passwordService.hash(req.body.password);
-
-            await emailService.sendMail(req.body.email, WELCOME, { userName: req.body.name });
 
             const newUser = await User.create({ ...req.body, password: hashedPassword });
 
+            const token = jwtService.createActionToken();
+            await Action.create({token, type:ACTION, user_id:newUser._id});
+            await emailService.sendMail(req.body.email, WELCOME, { userName: req.body.name, token });
             res.json(newUser);
         } catch (e) {
             next(e);
@@ -61,7 +60,7 @@ module.exports = {
     },
 
     updateUser: (req, res) => {
-        res.json('YODATE USER');
+        res.json('UPDATE USER');
     },
 
     deleteAccount: (req, res, next) => {

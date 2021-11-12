@@ -17,12 +17,24 @@ module.exports = {
 
     verifyToken: async (token, tokenType = tokenTypeEnum.ACCESS) => {
         try {
-            const secret = tokenType === tokenTypeEnum.ACCESS ? JWT_ACCESS_SECRET : JWT_REFRESH_SECRET;
+            let secret = '';
+            switch (tokenType) {
+                case tokenTypeEnum.ACCESS:
+                    secret = JWT_ACCESS_SECRET;
+                    break;
+                case tokenTypeEnum.REFRESH:
+                    secret = JWT_REFRESH_SECRET;
+                    break;
+                case tokenTypeEnum.ACTION:
+                    secret = JWT_ACTION_SECRET;
+                    break;
+
+            }
 
             await jwt.verify(token, secret);
         } catch (e) {
             throw new ErrorHandler('Invalid token', 401);
         }
     },
-    createActionToken: () => jwt.sign({}, JWT_ACTION_SECRET, {expiresIn:'1d'})
+    createActionToken: () => jwt.sign({}, JWT_ACTION_SECRET, { expiresIn: '1d' })
 };

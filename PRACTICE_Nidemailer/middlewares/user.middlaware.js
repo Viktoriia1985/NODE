@@ -72,4 +72,15 @@ module.exports = {
             next(e);
         }
     },
+    isUserActivate: (req, res, next) => {
+        try {
+            const { user } = req;
+            console.log(user);
+            if (!user.is_active)
+            {throw new ErrorHandler('User is not active', 403);}
+     
+            next();
+        } catch (e) {
+            next(e);
+        }}
 };

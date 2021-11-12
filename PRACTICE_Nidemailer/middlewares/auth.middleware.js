@@ -3,6 +3,8 @@ const { tokenTypes } = require('../configs');
 const { jwtService, passwordService } = require('../service');
 const { ErrorHandler } = require('../errors');
 const O_Auth = require('../dataBase/O_Auth');
+const tokenTypeEnum = require('../configs/token-types.enum');
+const Action = require('../dataBase/Action');
 
 module.exports = {
     isPasswordsMatched: async (req, res, next) => {
@@ -70,6 +72,27 @@ module.exports = {
 
             req.user = tokenResponse.user_id;
 
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+    checkActivateToken: async (req, res, next) => {
+        try {
+            const { token } = req.params;
+            await jwtService.verifyToken(token, tokenTypeEnum.ACTION);
+
+            const { user_id: user, _id } = await Action.findOne({
+                token,
+                type: tokenTypeEnum.ACTION
+            }).populate('user_id');
+
+            if (!user) {
+                throw new ErrorHandler('Invalid token', 401);
+            }
+
+            await Action.deleteOne({ _id });
+            req.user = user;
             next();
         } catch (e) {
             next(e);

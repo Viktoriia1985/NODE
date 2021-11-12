@@ -16,6 +16,8 @@ router.post(
     userController.createUser
 );
 
+router.use(authMiddleware.checkAccessToken, userMiddleware.isUserActivate);
+
 router.put('/',
     userController.updateUser);
 

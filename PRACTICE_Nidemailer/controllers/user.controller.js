@@ -14,7 +14,6 @@ module.exports = {
         } catch (e) {
             next(e);
         }
-
     },
 
     getUserById: async (req, res, next) => {

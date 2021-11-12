@@ -35,5 +35,18 @@ module.exports = {
             next(e);
         }
     },
+    activate: async (req, res, next) => {
+        try {
+            const {_id} = req.user;
+            await User.updateOne({_id}, {is_active: true});
+
+            res.status(200)
+                .json('USER is Active');
+
+        } catch (e) {
+            next (e);
+        }
+
+    }
 };
 

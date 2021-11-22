@@ -8,6 +8,4 @@ module.exports = {
 
     NO_REPLY_EMAIL_PASSWORD: process.env.NO_REPLY_EMAIL_PASSWORD,
     NO_REPLY_EMAIL: process.env.NO_REPLY_EMAIL,
-
-    //test
 };

@@ -58,9 +58,11 @@ module.exports = {
 
             await jwtService.verifyToken(token, tokenTypes.REFRESH);
 
-            const tokenResponse = await O_Auth
-                .findOne({ refresh_token: token })
-                .populate('user_id');
+            const tokenResponse = await O_Auth.findOne({ refresh_token: token });
+
+            console.log('tokenResponsetokenResponsetokenResponsetokenResponse');
+            console.log(tokenResponse);
+            console.log('tokenResponsetokenResponsetokenResponsetokenResponse');
 
             if (!tokenResponse) {
                 throw new ErrorHandler('Invalid token', 401);

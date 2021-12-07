@@ -11,7 +11,7 @@ router.post(
         ADMIN,
         USER
     ]),
-    authMiddleware.isPasswordsMatched,
+    // authMiddleware.isPasswordsMatched,
     authController.login
 );
 
@@ -20,7 +20,13 @@ router.post('/logout',
 
 router.post('/refresh',
     authMiddleware.checkRefreshToken,
-    authController.login);
+    authController.refreshToken);
+
+router.post('/password/forgot',
+    authController.sendMailForgotPassword);
+
+router.put('/password/forgot',
+    authController.setNewPasswordAfterForgot);
 
 module.exports = router;
 

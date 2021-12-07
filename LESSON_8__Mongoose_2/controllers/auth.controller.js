@@ -95,6 +95,7 @@ module.exports = {
         }
     },
 
+    // eslint-disable-next-line require-await
     setNewPasswordAfterForgot: async (req, res, next) => {
         try {
             const actionToken = req.get(AUTHORIZATION);

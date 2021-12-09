@@ -77,10 +77,6 @@ module.exports = {
 
             const tokenResponse = await O_Auth.findOne({ refresh_token: token });
 
-            console.log('tokenResponsetokenResponsetokenResponsetokenResponse');
-            console.log(tokenResponse);
-            console.log('tokenResponsetokenResponsetokenResponsetokenResponse');
-
             if (!tokenResponse) {
                 throw new ErrorHandler('Invalid token', 401);
             }
@@ -88,10 +84,25 @@ module.exports = {
             await O_Auth.remove({ refresh_token: token });
 
             req.user = tokenResponse.user_id;
-
             next();
         } catch (e) {
             next(e);
         }
-    }
+    },
+
+    isUserEmailValid: (req, res, next) => {
+        try {
+            const { error, value } = authValidators.emailValidator.validate(req.body);
+
+            if (error) {
+                throw new ErrorHandler('Wrong mail', 400);
+            }
+
+            req.body = value;
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
 };

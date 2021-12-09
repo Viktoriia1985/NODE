@@ -21,7 +21,17 @@ const forgotPassValidator = Joi.object({
         .required(),
 });
 
+const emailValidator = Joi.object({
+    email: Joi
+        .string()
+        .regex(EMAIL_REGEXP)
+        .trim()
+        .required(),
+
+});
+
 module.exports = {
     loginValidator,
-    forgotPassValidator
+    forgotPassValidator,
+    emailValidator
 };

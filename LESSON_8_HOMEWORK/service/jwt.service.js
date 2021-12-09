@@ -31,7 +31,7 @@ module.exports = {
 
         switch (actionTokenType) {
             case FORGOT_PASSWORD:
-                secretWord = 'HELLO'; // TODO from config
+                secretWord = process.env.JWT_ACTION_SECRET;
                 break;
             default:
                 throw new ErrorHandler('wrong token type', 500);

@@ -24,9 +24,10 @@ router.post('/refresh',
     authController.refreshToken);
 
 router.post('/password/forgot',
-    // todo валыдацыя емейлу (joi)
-    // todo перевырити чи е такий мейлик
-    authController.sendMailForgotPassword);
+    authMiddleware.isUserEmailValid,
+    userMiddleware.isEmailPresent,
+    authController.sendMailForgotPassword
+);
 
 router.put('/password/forgot',
     // todo валыдаыя нового паролю

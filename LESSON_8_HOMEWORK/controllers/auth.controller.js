@@ -68,13 +68,6 @@ module.exports = {
             const { email } = req.body;
             const { user } = req;
 
-            // const user = await User.findOne({ email });
-            //
-            // if (!user) {
-            //     throw new ErrorHandler('User not found, 404');
-            // }
-            // req.user = user;
-
             const actionToken = jwtService.generateActionToken(ActionTokenTypeEnum.FORGOT_PASSWORD);
 
             await ActionToken.create({

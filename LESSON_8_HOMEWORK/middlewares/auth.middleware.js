@@ -59,7 +59,6 @@ module.exports = {
             }
 
             req.user = tokenResponse.user_id;
-
             next();
         } catch (e) {
             next(e);

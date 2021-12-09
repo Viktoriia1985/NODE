@@ -16,7 +16,7 @@ router.post(
 );
 
 router.post('/logout',
-    //todo check authoriz
+    authMiddleware.checkAccessToken,
     authController.logout);
 
 router.post('/refresh',

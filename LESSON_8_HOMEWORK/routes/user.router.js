@@ -17,6 +17,7 @@ router.post(
 );
 
 router.put('/',
+    authMiddleware.checkAccessToken,
     userController.updateUser);
 
 router.delete('/',

@@ -33,7 +33,7 @@ module.exports = {
 
     logout: async (req, res, next) => {
         try {
-        const users = await User.find();
+        const users = await O_Auth.deleteMany({user_id: req.user});
 
             res.json(users);
         } catch (e) {

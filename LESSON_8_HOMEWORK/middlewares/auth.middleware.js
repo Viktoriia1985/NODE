@@ -3,6 +3,8 @@ const { tokenTypes } = require('../configs');
 const { jwtService, passwordService } = require('../service');
 const { ErrorHandler } = require('../errors');
 const O_Auth = require('../dataBase/O_Auth');
+const userValidator = require('../validators/user.validator');
+const { authValidators } = require('../validators');
 
 module.exports = {
     isPasswordsMatched: async (req, res, next) => {
@@ -15,6 +17,22 @@ module.exports = {
             console.log('___________________________');
 
             await passwordService.compare(password, hashPassword);
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    isUserBodyValidAuth: (req, res, next) => {
+        try {
+            const { error, value } = authValidators.loginValidator.validate(req.body);
+
+            if (error) {
+                throw new ErrorHandler('Wrong mail or password', 400);
+            }
+
+            req.body = value;
 
             next();
         } catch (e) {

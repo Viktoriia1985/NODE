@@ -3,22 +3,19 @@ const O_Auth = require('../dataBase/O_Auth');
 const ActionToken = require('../dataBase/ActionToken');
 const { userNormalizator } = require('../util/user.util');
 const { jwtService, emailService } = require('../service');
-const ErrorHandler = require('../errors/ErrorHandler');
 const ActionTokenTypeEnum = require('../configs/action-token-type.enum');
 const EmailActionEnum = require('../configs/email-action.enum');
 const { AUTHORIZATION } = require('../configs/constants');
 
-
 module.exports = {
     login: async (req, res, next) => {
         try {
-            const { user } = req;
-
-            await user.comparePassword(req.body.password);
+            await req.user.comparePassword(req.body.password); // перевірка чи співпадають паролі за рахунок методу
+            // comparePassword
 
             const tokenPair = jwtService.generateTokenPair();
 
-            const userNormalized = userNormalizator(user);
+            const userNormalized = userNormalizator(req.user);
 
             await O_Auth.create({
                 ...tokenPair,
@@ -36,7 +33,7 @@ module.exports = {
 
     logout: async (req, res, next) => {
         try {
-            const users = await User.find();
+        const users = await User.find();
 
             res.json(users);
         } catch (e) {
@@ -69,12 +66,14 @@ module.exports = {
     sendMailForgotPassword: async (req, res, next) => {
         try {
             const { email } = req.body;
+            const { user } = req;
 
-            const user = await User.findOne({ email });
-
-            if (!user) {
-                throw new ErrorHandler('User not found, 404');
-            }
+            // const user = await User.findOne({ email });
+            //
+            // if (!user) {
+            //     throw new ErrorHandler('User not found, 404');
+            // }
+            // req.user = user;
 
             const actionToken = jwtService.generateActionToken(ActionTokenTypeEnum.FORGOT_PASSWORD);
 
@@ -89,7 +88,7 @@ module.exports = {
                 EmailActionEnum.FORGOT_PASSWORD,
                 { forgotPasswordUrl: `http//localhost:3000/passwordForgot?token=${ actionToken }` });
 
-            res.json('Ok');
+            res.json('Sent');
         } catch (e) {
             next(e);
         }
@@ -99,9 +98,13 @@ module.exports = {
     setNewPasswordAfterForgot: async (req, res, next) => {
         try {
             const actionToken = req.get(AUTHORIZATION);
-            console.log(req.body);
+            // console.log(req.body);
+            // console.log(actionToken);
 
-            console.log(actionToken);
+            // todo записати новий пароль в базу
+
+            await ActionToken.deleteOne({token: actionToken});
+
 
             res.json('Well done');
         } catch (e) {

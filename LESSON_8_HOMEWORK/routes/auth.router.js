@@ -6,16 +6,17 @@ const { ADMIN, USER } = require('../configs/user-roles.enum');
 
 router.post(
     '/',
-    userMiddleware.isUserPresent,
+    authMiddleware.isUserBodyValidAuth, // перевірка на авторизацію юзера, чи його email and password валідні
+    userMiddleware.isUserPresent, // перевіряємо чи в базі є такий юзер
     userMiddleware.checkUserRole([
         ADMIN,
         USER
     ]),
-    // authMiddleware.isPasswordsMatched,
     authController.login
 );
 
 router.post('/logout',
+    //todo check authoriz
     authController.logout);
 
 router.post('/refresh',
@@ -23,9 +24,13 @@ router.post('/refresh',
     authController.refreshToken);
 
 router.post('/password/forgot',
+    // todo валыдацыя емейлу (joi)
+    // todo перевырити чи е такий мейлик
     authController.sendMailForgotPassword);
 
 router.put('/password/forgot',
+    // todo валыдаыя нового паролю
+    // todo перевырити токен (екшин)
     authController.setNewPasswordAfterForgot);
 
 module.exports = router;

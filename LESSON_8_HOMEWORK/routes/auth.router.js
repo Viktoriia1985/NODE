@@ -30,7 +30,7 @@ router.post('/password/forgot',
 );
 
 router.put('/password/forgot',
-    // todo валыдаыя нового паролю
+    // todo валыдация нового паролю
     // todo перевырити токен (екшин)
     authController.setNewPasswordAfterForgot);
 

@@ -5,7 +5,7 @@ const { userNormalizator } = require('../util/user.util');
 const { jwtService, emailService } = require('../service');
 const ActionTokenTypeEnum = require('../configs/action-token-type.enum');
 const EmailActionEnum = require('../configs/email-action.enum');
-const { AUTHORIZATION } = require('../configs/constants');
+const { isPasswordsMatched } = require('../middlewares/auth.middleware');
 
 module.exports = {
     login: async (req, res, next) => {
@@ -87,17 +87,21 @@ module.exports = {
         }
     },
 
-    // eslint-disable-next-line require-await
     setNewPasswordAfterForgot: async (req, res, next) => {
         try {
-            const actionToken = req.get(AUTHORIZATION);
-            // console.log(req.body);
-            // console.log(actionToken);
+            // todo записати новий пароль в базу  (made at home)
 
-            // todo записати новий пароль в базу
+            const { _id, name, email } = req.user;
 
-            await ActionToken.deleteOne({token: actionToken});
+            const { password } = req.body;
 
+            const hashedPassword = await isPasswordsMatched.hash(password);
+
+            await User.findByIdAndUpdate(_id, { password: hashedPassword });
+
+            await emailService.sendMail(email,{ userName: name, password });
+
+            await O_Auth.deleteMany({ user_id: _id });
 
             res.json('Well done');
         } catch (e) {

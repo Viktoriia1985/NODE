@@ -105,4 +105,19 @@ module.exports = {
         }
     },
 
+    isUserPasswordValid: (req, res, next) => {
+        try {
+            const { error, value } = authValidators.emailValidator.validate(req.body);
+
+            if (error) {
+                throw new ErrorHandler('Wrong mail or password', 400);
+            }
+
+            req.body = value;
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
 };

@@ -30,8 +30,8 @@ router.post('/password/forgot',
 );
 
 router.put('/password/forgot',
-    // todo валыдация нового паролю
-    // todo перевырити токен (екшин)
+    authMiddleware.isUserPasswordValid, // todo валыдация нового паролю (made at home)
+     authMiddleware.checkRefreshToken, // todo перевырити токен (екшин) (made at home)
     authController.setNewPasswordAfterForgot);
 
 module.exports = router;

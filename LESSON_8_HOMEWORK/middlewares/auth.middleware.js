@@ -3,18 +3,16 @@ const { tokenTypes } = require('../configs');
 const { jwtService, passwordService } = require('../service');
 const { ErrorHandler } = require('../errors');
 const O_Auth = require('../dataBase/O_Auth');
+const ActionToken = require('../dataBase/ActionToken');
 const userValidator = require('../validators/user.validator');
 const { authValidators } = require('../validators');
+const { ACTIVATE_ACCOUNT, FORGOT_PASSWORD } = require('../configs/action-token-type.enum');
 
 module.exports = {
     isPasswordsMatched: async (req, res, next) => {
         try {
             const { password } = req.body;
             const { password: hashPassword } = req.user;
-
-            console.log('___________________________');
-            console.log(password);
-            console.log('___________________________');
 
             await passwordService.compare(password, hashPassword);
 
@@ -52,6 +50,31 @@ module.exports = {
 
             const tokenResponse = await O_Auth
                 .findOne({ access_token: token })
+                .populate('user_id');
+
+            if (!tokenResponse) {
+                throw new ErrorHandler('Invalid token', 401);
+            }
+
+            req.user = tokenResponse.user_id;
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    checkActionToken: async (req, res, next) => {
+        try {
+            const token = req.get(AUTHORIZATION);
+
+            if (!token) {
+                throw new ErrorHandler('No token', 401);
+            }
+
+            await jwtService.verifyActionToken(token, FORGOT_PASSWORD);
+
+            const tokenResponse = await ActionToken
+                .findOne({ token })
                 .populate('user_id');
 
             if (!tokenResponse) {
@@ -107,10 +130,10 @@ module.exports = {
 
     isUserPasswordValid: (req, res, next) => {
         try {
-            const { error, value } = authValidators.emailValidator.validate(req.body);
+            const { error, value } = authValidators.forgotPassValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler('Wrong mail or password', 400);
+                throw new ErrorHandler('Wrong password', 400);
             }
 
             req.body = value;

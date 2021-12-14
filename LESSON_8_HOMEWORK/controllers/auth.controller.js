@@ -2,10 +2,11 @@ const User = require('../dataBase/User');
 const O_Auth = require('../dataBase/O_Auth');
 const ActionToken = require('../dataBase/ActionToken');
 const { userNormalizator } = require('../util/user.util');
-const { jwtService, emailService } = require('../service');
+const { jwtService, emailService, passwordService } = require('../service');
 const ActionTokenTypeEnum = require('../configs/action-token-type.enum');
 const EmailActionEnum = require('../configs/email-action.enum');
-const { isPasswordsMatched } = require('../middlewares/auth.middleware');
+const { FORGOT_PASSWORD } = require('../configs/action-token-type.enum');
+const emailActionsEnum = require('../configs/email-action.enum');
 
 module.exports = {
     login: async (req, res, next) => {
@@ -89,19 +90,19 @@ module.exports = {
 
     setNewPasswordAfterForgot: async (req, res, next) => {
         try {
-            // todo записати новий пароль в базу  (made at home)
-
             const { _id, name, email } = req.user;
 
             const { password } = req.body;
 
-            const hashedPassword = await isPasswordsMatched.hash(password);
+            const hashedPassword = await passwordService.hash(password);
 
             await User.findByIdAndUpdate(_id, { password: hashedPassword });
 
-            await emailService.sendMail(email,{ userName: name, password });
+            await emailService.sendMail(email, emailActionsEnum.SET_NEW_PASSWORD,{ userName: name });
 
             await O_Auth.deleteMany({ user_id: _id });
+
+            await ActionToken.deleteMany( {user_id: _id, token_type: FORGOT_PASSWORD});
 
             res.json('Well done');
         } catch (e) {

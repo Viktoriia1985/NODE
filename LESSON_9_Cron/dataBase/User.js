@@ -29,7 +29,6 @@ const userSchema = new Schema({
 }, { timestamps: true, tobject: { virtuals: true }, toJSON: { virtuals: true } });
 
 userSchema.virtual('fullName').get(function() {
-    console.log('THIS !!!!!!!');
     return `${ this.name } ${ this.role } HA-HA`;
 });
 

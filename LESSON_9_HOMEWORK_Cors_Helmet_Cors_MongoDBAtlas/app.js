@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config();
+const cors = require('cors');
+require('dotenv').config({ path: '../.env' });
 
 const { MONGO_CONNECT_URL, PORT } = require('./configs/config');
 
@@ -27,3 +28,11 @@ app.use('*', (err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`App listen ${PORT}`);
 });
+
+function _configureCors(origin, callback) {
+    const whiteList = 'http:300;http:4200'.split(';');
+
+    if(!whiteList.includes(origin)) {
+        return callback( )
+    }
+}

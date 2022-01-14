@@ -10,5 +10,5 @@ module.exports = {
     NO_REPLY_EMAIL_PASSWORD: process.env.NO_REPLY_EMAIL_PASSWORD,
     NO_REPLY_EMAIL: process.env.NO_REPLY_EMAIL,
 
-    ALLOWED_ORIGIN: process.env.ALLOWED_ORIFIN || 'http://localhost:3000',
+    ALLOWED_ORIGIN: process.env.ALLOWED_ORIGIN || 'http://localhost:3000',
 };

@@ -3,9 +3,10 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const { rateLimit } = require('express-rate-limit');
 const helmet = require('helmet');
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config({ path: '../env' });
 
 const { ALLOWED_ORIGIN, MONGO_CONNECT_URL, PORT, NODE_ENV } = require('./configs/config');
+const startCron = require('./cron');
 const { ErrorHandler } = require('./errors');
 const checkDefaultDate = require('./util/default.data.util');
 
@@ -48,6 +49,7 @@ app.use('*', (err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`App listen ${ PORT }`);
     checkDefaultDate();
+    startCron();
 });
 
 function _configureCors(origin, callback) {

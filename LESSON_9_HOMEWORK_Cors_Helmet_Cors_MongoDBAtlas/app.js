@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const { rateLimit } = require('express-rate-limit');
 const helmet = require('helmet');
-require('dotenv').config({ path: '../env' });
+require('dotenv').config({ path: '../.env' });
 
 const { ALLOWED_ORIGIN, MONGO_CONNECT_URL, PORT, NODE_ENV } = require('./configs/config');
 const startCron = require('./cron');

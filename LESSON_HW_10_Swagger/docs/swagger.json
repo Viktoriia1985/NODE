@@ -107,7 +107,50 @@
           "400": {
             "description": "Just an error",
             "schema": {
-             "$ref": "#/definitions/commonError"
+              "$ref": "#/definitions/commonError"
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "put": {
+        "tags": [
+          "Users/:id"
+        ],
+        "operationId": "updateUser",
+        "description": "This is how to update user",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User that needs to be added",
+            "required": true,
+            "schema": {
+             "$ref": "#/definitions/singleUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User was created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/singleUser"
+              }
+            }
+          },
+          "400": {
+            "description": "Just an error",
+            "schema": {
+              "$ref": "#/definitions/commonError"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+            "$ref": "#/definitions/notFound"
             }
           }
         }
@@ -143,6 +186,19 @@
         "code": {
           "type": "number",
           "example": "400"
+        }
+      }
+    },
+    "notFound": {
+      "type": "object",
+      "properties": {
+        "msg": {
+          "type": "string",
+          "example": "User not found"
+        },
+        "code": {
+          "type": "number",
+          "example": "404"
         }
       }
     }

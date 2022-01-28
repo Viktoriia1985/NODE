@@ -1,0 +1,78 @@
+
+// schema for writing swagger documents : https://petstore.swagger.io/v2/swagger.json
+
+
+
+"paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "getAllUsers",
+        "description": "This is how to get all users",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "formData",
+            "default": "Dimas",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "default": "example@gmail.com",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "default": "123!_World",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User was created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "example": "12345qwerty",
+                  "description": "MongoDB ID"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "example@gmail.com"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Dimasik"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Just an error",
+            "schema": {
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "example": "something went wrong"
+                },
+                "code": {
+                  "type": "number",
+                  "example": 400
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
